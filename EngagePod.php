@@ -65,6 +65,7 @@ class EngagePod {
         }
     }
 
+    //Add a contact
     public function addContact($databaseID, $updateIfFound, $columns) {
         $data["Envelope"] = array(
             "Body" => array(
@@ -72,12 +73,40 @@ class EngagePod {
                     "LIST_ID" => $databaseID,
                     "CREATED_FROM" => 1,        // 1 = created manually
                     "UPDATE_IF_FOUND" => ($updateIfFound ? 'true' : 'false'),
-                    "COLUMN" => array(),
-                ),
-            ),
+                    "SEND_AUTOREPLY" => 'true',
+                    "COLUMN" => array()
+                )
+            )
         );
         foreach ($columns as $name => $value) {
             $data["Envelope"]["Body"]["AddRecipient"]["COLUMN"][] = array("NAME" => $name, "VALUE" => $value);
+        }
+        $response = $this->_request($data);
+        $result = $response["Envelope"]["Body"]["RESULT"];
+        if ($this->_isSuccess($result)) {
+            if (isset($result['RecipientId']))
+                return $this->optinContact($databaseID, array('RecipientId' => $result['RecipientId']) + $columns);
+            else {
+                throw new Exception('Recipient added but no recipient ID was returned from the server.');
+            }
+        } else {
+            throw new Exception("AddRecipient Error: ".$this->_getErrorFromResponse($response));
+        }
+    }
+    
+    //Optin a contact
+    public function optinContact($databaseID, $columns) {
+        $data["Envelope"] = array(
+            "Body" => array(
+                "DoubleOptInRecipient" => array(
+                    "LIST_ID" => $databaseID,
+                    "SEND_AUTOREPLY" => 'true',
+                    "COLUMN" => array()
+                )
+            )
+        );
+        foreach ($columns as $name => $value) {
+            $data["Envelope"]["Body"]["DoubleOptInRecipient"]["COLUMN"][] = array("NAME" => $name, "VALUE" => $value);
         }
         $response = $this->_request($data);
         $result = $response["Envelope"]["Body"]["RESULT"];
@@ -88,7 +117,29 @@ class EngagePod {
                 throw new Exception('Recipient added but no recipient ID was returned from the server.');
             }
         } else {
-            throw new Exception("AddRecipient Error: ".$this->_getErrorFromResponse($response));
+            
+            throw new Exception("DoubleOptInRecipient Error: ".$this->_getErrorFromResponse($response));
+        }
+    }
+    
+    //Send a Mailing
+    public function sendMailing($mailingID, $email) {
+        $data["Envelope"] = array(
+            "Body" => array(
+                "SendMailing" => array(
+                    "MailingId" => $mailingID,
+                    "RecipientEmail" => $email,
+                    "COLUMN" => array()
+                )
+            )
+        );
+        debug($data);
+        $response = $this->_request($data);
+        $result = $response["Envelope"]["Body"]["RESULT"];
+        if ($this->_isSuccess($result)) {
+            return $response;
+        } else {
+            throw new Exception("SendMailing Error: ".$this->_getErrorFromResponse($response));
         }
     }
 

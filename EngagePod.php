@@ -1,8 +1,8 @@
 <?php
 
-require_once 'EngagePod4/xmlLib.php';
+require_once 'EngagePod/xmlLib.php';
 
-class EngagePod4 {
+class EngagePod {
     /**
      * Current version of the library
      *
@@ -12,16 +12,17 @@ class EngagePod4 {
      */
     const VERSION = '0.0.2';
 
-    private $_baseUrl = 'http://api4.silverpop.com/XMLAPI';
+    protected static $_baseUrl;
+    
     private $_session_encoding;
     private $_jsessionid;
     private $_username;
     private $_password;
 
-    public function __construct($username, $password) {
+    public function __construct($username, $password, $baseUrl) {
         // It would be a good thing to cache the jsessionid somewhere and reuse it across multiple requests
         // otherwise we are authenticating to the server once for every request
-        $this->_login($username, $password);
+        $this->_login($username, $password, $baseUrl);
     }
 
     public function select($databaseName, $listName) {
@@ -196,7 +197,9 @@ class EngagePod4 {
 
     /* Private Functions */
 
-    private function _login($username, $password) {
+    private function _login($username, $password, $baseUrl) {
+        static::$_baseUrl = $baseUrl;
+        
         $data["Envelope"] = array(
             "Body" => array(
                 "Login" => array(
@@ -218,7 +221,7 @@ class EngagePod4 {
     }
 
     private function _getFullUrl() {
-        return $this->_baseUrl . (isset($this->_session_encoding) ? $this->_session_encoding : '');
+        return static::$_baseUrl . (isset($this->_session_encoding) ? $this->_session_encoding : '');
     }
 
     private function _request($data) {

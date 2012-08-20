@@ -72,7 +72,7 @@ class EngagePod {
                 "AddRecipient" => array(
                     "LIST_ID" => $databaseID,
                     "CREATED_FROM" => 1,        // 1 = created manually
-                    //"UPDATE_IF_FOUND" => ($updateIfFound ? 'true' : 'false'),
+                    "UPDATE_IF_FOUND" => ($updateIfFound ? 'true' : 'false'),
                     "SEND_AUTOREPLY" => 'true',
                     "COLUMN" => array()
                 )

@@ -85,7 +85,7 @@ class EngagePod {
         $result = $response["Envelope"]["Body"]["RESULT"];
         if ($this->_isSuccess($result)) {
             if (isset($result['RecipientId']))
-                return $this->optinContact($databaseID, array('RecipientId' => $result['RecipientId']) + $columns);
+                return $result['RecipientId'];
             else {
                 throw new Exception('Recipient added but no recipient ID was returned from the server.');
             }

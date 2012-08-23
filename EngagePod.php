@@ -79,7 +79,7 @@ class EngagePod {
             )
         );
         foreach ($columns as $name => $value) {
-            $data["Envelope"]["Body"]["AddRecipient"]["COLUMN"][] = array("NAME" => $name, "VALUE" => utf8_encode($value));
+            $data["Envelope"]["Body"]["AddRecipient"]["COLUMN"][] = array("NAME" => $name, "VALUE" => utf8_decode($value));
         }
         $response = $this->_request($data);
         $result = $response["Envelope"]["Body"]["RESULT"];
@@ -106,7 +106,7 @@ class EngagePod {
             )
         );
         foreach ($columns as $name => $value) {
-            $data["Envelope"]["Body"]["DoubleOptInRecipient"]["COLUMN"][] = array("NAME" => $name, "VALUE" => utf8_encode($value));
+            $data["Envelope"]["Body"]["DoubleOptInRecipient"]["COLUMN"][] = array("NAME" => $name, "VALUE" => utf8_decode($value));
         }
         $response = $this->_request($data);
         $result = $response["Envelope"]["Body"]["RESULT"];
@@ -301,17 +301,13 @@ class EngagePod {
         //set the url, number of POST vars, POST data
         curl_setopt($ch,CURLOPT_URL,$this->_getFullUrl());
         curl_setopt($ch,CURLOPT_ENCODING,"UTF-8");
-        curl_setopt($ch,CURLOPT_HTTPHEADER,array(
-	        	"Content-Type: text/xml; charset=utf-8"
-	        )
-        );
         curl_setopt($ch,CURLOPT_POST,count($fields));
         curl_setopt($ch,CURLOPT_POSTFIELDS,$fields_string);
         curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);
 
         //execute post
         $result = curl_exec($ch);
-
+        
         //close connection
         curl_close($ch);
 

@@ -133,7 +133,6 @@ class EngagePod {
                 )
             )
         );
-        debug($data);
         $response = $this->_request($data);
         $result = $response["Envelope"]["Body"]["RESULT"];
         if ($this->_isSuccess($result)) {
@@ -301,6 +300,7 @@ class EngagePod {
 
         //set the url, number of POST vars, POST data
         curl_setopt($ch,CURLOPT_URL,$this->_getFullUrl());
+        curl_setopt($ch,CURLOPT_ENCODING,"UTF-8");
         curl_setopt($ch,CURLOPT_POST,count($fields));
         curl_setopt($ch,CURLOPT_POSTFIELDS,$fields_string);
         curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);

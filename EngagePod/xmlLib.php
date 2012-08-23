@@ -20,7 +20,7 @@ class ArrayToXML {
 	
 	function & getXML() {
 		return $this->_data;
-	}
+	} 
 	
 	function _processArray( &$array, $level = 0, $parent = '' ) {
 		//ksort($array);

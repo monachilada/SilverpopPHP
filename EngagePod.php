@@ -23,7 +23,7 @@ class EngagePod {
         // It would be a good thing to cache the jsessionid somewhere and reuse it across multiple requests
         // otherwise we are authenticating to the server once for every request
         $this->_login($username, $password, $baseUrl);
-    }
+    } 
 
     public function select($databaseName, $listName) {
         $this->useDatabase($databaseName);

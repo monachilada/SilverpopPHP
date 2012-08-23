@@ -79,7 +79,7 @@ class EngagePod {
             )
         );
         foreach ($columns as $name => $value) {
-            $data["Envelope"]["Body"]["AddRecipient"]["COLUMN"][] = array("NAME" => $name, "VALUE" => $value);
+            $data["Envelope"]["Body"]["AddRecipient"]["COLUMN"][] = array("NAME" => $name, "VALUE" => utf8_encode($value));
         }
         $response = $this->_request($data);
         $result = $response["Envelope"]["Body"]["RESULT"];
@@ -106,7 +106,7 @@ class EngagePod {
             )
         );
         foreach ($columns as $name => $value) {
-            $data["Envelope"]["Body"]["DoubleOptInRecipient"]["COLUMN"][] = array("NAME" => $name, "VALUE" => $value);
+            $data["Envelope"]["Body"]["DoubleOptInRecipient"]["COLUMN"][] = array("NAME" => $name, "VALUE" => utf8_encode($value));
         }
         $response = $this->_request($data);
         $result = $response["Envelope"]["Body"]["RESULT"];
